@@ -7,14 +7,35 @@ import org.springframework.web.context.annotation.RequestScope;
 @RequestScope
 public class LoginProcessor {
 
+	private final MainController mainController;
+
 	private String username;
 	private String password;
 
-	public boolean login(String username, String password) {
-		this.username = username;
-		this.password = password;
+	private final LoginUserManagementService loginUserMangementService;
 
-		return username.equals("suesue") && password.equals("password");
+	private final LoginCountService loginCountService;
+
+	public LoginProcessor(LoginUserManagementService loginUserManagementService, LoginCountService loginCountService,
+			MainController mainController) {
+		this.loginUserMangementService = loginUserManagementService;
+		this.loginCountService = loginCountService;
+		this.mainController = mainController;
+	}
+
+	public boolean login() {
+		loginCountService.incrementCount();
+
+		String username = this.username;
+		String password = this.password;
+
+		boolean loginResult = false;
+
+		if (username.equals("suesue") && password.equals("password")) {
+			loginResult = true;
+			loginUserMangementService.setUsername(username);
+		}
+		return loginResult;
 	}
 
 	public String getUsername() {

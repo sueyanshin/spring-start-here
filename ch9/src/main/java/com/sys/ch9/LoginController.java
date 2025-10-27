@@ -23,13 +23,16 @@ public class LoginController {
 	@PostMapping("/login")
 	public String login(@RequestParam String username, @RequestParam String password, Model model) {
 
-		boolean loggedIn = loginProcessor.login(username, password);
-		if (loggedIn) {
-			model.addAttribute("message", "login succeed");
+		loginProcessor.setUsername(username);
+		loginProcessor.setPassword(password);
 
-		} else {
-			model.addAttribute("message", "login failed");
+		boolean loggedIn = loginProcessor.login();
+		if (loggedIn) {
+			return "redirect:/main";
+
 		}
+		model.addAttribute("message", "login failed");
 		return "login.html";
 	}
+
 }
